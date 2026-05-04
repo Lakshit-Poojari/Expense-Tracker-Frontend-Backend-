@@ -4,7 +4,7 @@ import Table from '../Table/Table'
 function Layout() {
   return (
     <>
-        <div>Layohjhhut</div>
+        <div>Layout</div>
         <Table/>
     </>
   )

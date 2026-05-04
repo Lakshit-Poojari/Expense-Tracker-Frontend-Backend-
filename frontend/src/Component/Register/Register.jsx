@@ -66,7 +66,7 @@ function Register() {
                     placeholder='Enter password' 
                     onChange={handleChange} 
                     className='form-control'
-                    /><br/><br />
+                    /><br /><br />
 
                 <button type='submit' className='form-control'>Register</button>
             </form>
