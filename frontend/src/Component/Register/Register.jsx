@@ -27,6 +27,7 @@ function Register() {
             const res = await axios.post(API + "register", form)
             setmessage(res.data.message)
             console.log(res.data.message);
+            navigate("/login")
         } catch (error) {
             console.log(error);
             setmessage(error.message)
