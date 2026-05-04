@@ -31,7 +31,20 @@ function Register() {
         }
     }
   return (
-    <div>Register</div>
+    <div>
+        <div><h2>Register</h2></div>
+        <div>
+            <form onSubmit={handleSubmit}>
+                <label htmlFor="">User name</label>
+                <input type="text" name='' value={} placeholder='Enter user name' onChange={handleChange}/>
+                <label htmlFor="">Email id</label>
+                <input type="text" name='' value={} placeholder='Enter user email' onChange={handleChange}/>
+                <label htmlFor="">Password</label>
+                <input type="text" name='' value={} placeholder='Enter password' onChange={handleChange}/>
+                <button type='Submit'>Register</button>
+            </form>
+        </div>
+    </div>
   )
 }
 

@@ -1,4 +1,5 @@
-import db from "../database/db";
+import db from "../database/db.js";
+import mysql from "mysql2/promise"
 
 export const addTransaction = async(user_id, amount, type, category, description) =>{
     try {

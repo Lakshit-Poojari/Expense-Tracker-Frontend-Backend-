@@ -1,4 +1,6 @@
-import db from "../database/db";
+import db from "../database/db.js";
+import mysql from "mysql2/promise"
+
 
 export const createUser = async(name, email, password) => {
     try {

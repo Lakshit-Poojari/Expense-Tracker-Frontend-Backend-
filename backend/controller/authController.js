@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken"
 import bcrypt from "bcrypt"
-import { createUser, findUser } from "../model/userModel"
+import { createUser, findUser } from "../model/userModel.js"
 
 export const SECRET_KEY = "EXPENCE_TRACK"
 

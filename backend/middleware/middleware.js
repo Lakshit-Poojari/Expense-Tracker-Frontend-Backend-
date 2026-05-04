@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken"
-import { SECRET_KEY } from "../controller/authController"
+import { SECRET_KEY } from "../controller/authController.js"
 
 export const verifyToken = async(req, res, next) =>{
     try {
