@@ -1,12 +1,14 @@
 import React from 'react'
 import axios from "axios"
 import { useNavigate } from "react-router-dom";
+import { useState } from 'react';
+import "../Register/Register.css"
 
 function Register() {
     const [form, setform] = useState({
         name:"",
         email:"",
-        passwprd:""
+        password:""
     })
     const [message, setmessage] = useState("")
 
@@ -31,17 +33,42 @@ function Register() {
         }
     }
   return (
-    <div>
-        <div><h2>Register</h2></div>
-        <div>
+    <div className='container'>
+        <div><h2 className='text-center'>Register</h2></div>
+        <div className='container register'>
             <form onSubmit={handleSubmit}>
-                <label htmlFor="">User name</label>
-                <input type="text" name='' value={} placeholder='Enter user name' onChange={handleChange}/>
-                <label htmlFor="">Email id</label>
-                <input type="text" name='' value={} placeholder='Enter user email' onChange={handleChange}/>
-                <label htmlFor="">Password</label>
-                <input type="text" name='' value={} placeholder='Enter password' onChange={handleChange}/>
-                <button type='Submit'>Register</button>
+
+                <label htmlFor="">User name</label><br />
+                <input 
+                    type="text" 
+                    name='name' 
+                    value={form.name} 
+                    placeholder='Enter user name' 
+                    onChange={handleChange} 
+                    className='form-control'
+                    /><br /><br />
+
+                <label htmlFor="">Email id</label><br />
+                <input 
+                    type="text" 
+                    name='email' 
+                    value={form.email} 
+                    placeholder='Enter user email' 
+                    onChange={handleChange} 
+                    className='form-control'
+                    /><br /><br />
+
+                <label htmlFor="">Password</label><br />
+                <input 
+                    type="password" 
+                    name='password' 
+                    value={form.password} 
+                    placeholder='Enter password' 
+                    onChange={handleChange} 
+                    className='form-control'
+                    /><br /><br />
+
+                <button type='submit' className='form-control'>Register</button>
             </form>
         </div>
     </div>
