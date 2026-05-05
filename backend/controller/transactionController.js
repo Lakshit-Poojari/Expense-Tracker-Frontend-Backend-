@@ -16,7 +16,7 @@ export const createTransaction = async(req, res) =>{
             return res.json({message: "Missing field"})
         }
 
-        if (!["Income", "Expense"].includes(type)) {
+        if (!["income", "expense"].includes(type)) {
             return res.json({message : "Invalid Type"})
         }
 

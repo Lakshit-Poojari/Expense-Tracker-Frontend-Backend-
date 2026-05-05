@@ -1,128 +1,155 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Table from '../Table/Table'
 import axios from "axios"
 import Balance from '../Balance/Balance';
 
 function Layout() {
-  const [expense, setExpense] = useState({
+
+  const [expense, setExpense] = useState([])
+  const [form, setForm] = useState({
     amount: "",
     type: "",
     category: "",
     description: "",
     date: ""
-  });
-  const [message, setmessage] = useState("")
+  })
+
+  const [message, setMessage] = useState("")
 
   const API = "http://localhost:3000/api/"
 
-  const handleChange = (e) => {
-    setExpense({
-      ...expense,
-      [e.target.name]: e.target.value
-    });
-  };
-  
-  const handleSubmit = async (e) => {
-  e.preventDefault();
+  // 🔥 FETCH TRANSACTIONS
+  const fetchTransaction = async () => {
+    try {
+      const token = localStorage.getItem("token")
 
-  try {
-    const token = localStorage.getItem("token");
-
-    if (!token) {
-      setmessage("Please login again");
-      return;
-    }
-
-    const res = await axios.post(
-      API + "createTransaction",
-      expense,
-      {
+      const res = await axios.get(API + "getTransaction", {
         headers: {
           Authorization: `Bearer ${token}`
         }
-      }
-    );
+      })
 
-    setmessage(res.data.message);
+      setExpense(res.data)
 
-    // reset form
-    setExpense({
-      amount: "",
-      type: "",
-      category: "",
-      description: "",
-      date: ""
-    });
-
-  } catch (error) {
-    setmessage(error.response?.data?.message || "Error occurred");
+    } catch (error) {
+      setMessage(error.response?.data?.message || "Error fetching data")
+    }
   }
-};
+
+  // 🔥 HANDLE INPUT
+  const handleChange = (e) => {
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value
+    })
+  }
+
+  // 🔥 ADD TRANSACTION
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+
+    try {
+      const token = localStorage.getItem("token")
+
+      const res = await axios.post(
+        API + "createTransaction",
+        form,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      )
+
+      setMessage(res.data.message)
+
+      // reset form
+      setForm({
+        amount: "",
+        type: "",
+        category: "",
+        description: "",
+        date: ""
+      })
+
+      fetchTransaction() // ✅ refresh
+
+    } catch (error) {
+      setMessage(error.response?.data?.message || "Error")
+    }
+  }
+
+  useEffect(() => {
+    fetchTransaction()
+  }, [])
 
   return (
     <>
-      <div>
-        <h3>Expense Tracker</h3>
-      </div>
+      <h2>Expense Tracker</h2>
 
+      {/* FORM */}
+      <form onSubmit={handleSubmit}>
 
-      <div className='expense-input'>
-        <form onSubmit={handleSubmit}>
+        <input
+          type="number"
+          name="amount"
+          value={form.amount}
+          onChange={handleChange}
+          placeholder="Amount"
+          className='form-control'
+        /><br />
 
-          <input
-            type="number"
-            name="amount"
-            placeholder="Enter amount"
-            value={expense.amount}
-            onChange={handleChange}
-            className='form-control'
-          /> <br />
+        <select
+          name="type"
+          value={form.type}
+          onChange={handleChange}
+          className='form-control'
+        >
+          <option value="">Select</option>
+          <option value="income">Income</option>
+          <option value="expense">Expense</option>
+        </select><br />
 
-          <select
-            name="type"
-            value={expense.type}
-            onChange={handleChange}
-            className='form-control'
-          >
-            <option value="">Select Type</option>
-            <option value="Income">Income</option>
-            <option value="Expense">Expense</option>
-          </select><br />
+        <input
+          type="text"
+          name="category"
+          value={form.category}
+          onChange={handleChange}
+          placeholder="Category"
+          className='form-control'
+        /><br />
 
-          <input
-            type="text"
-            name="category"
-            placeholder="Category"
-            value={expense.category}
-            onChange={handleChange}
-            className='form-control'
-          /><br />
+        <input
+          type="text"
+          name="description"
+          value={form.description}
+          onChange={handleChange}
+          placeholder="Description"
+          className='form-control'
+        /><br />
 
-          <input
-            type="text"
-            name="description"
-            placeholder="Description"
-            value={expense.description}
-            onChange={handleChange}
-            className='form-control'
-          /><br />
+        <input
+          type="date"
+          name="date"
+          value={form.date}
+          onChange={handleChange}
+          className='form-control'
+        /> <br />
 
-          <input
-            type="date"
-            name="date"
-            value={expense.date}
-            onChange={handleChange}
-            className='form-control'
-          /><br />
+        <button className='form-control' type="submit">Add</button>
+      </form>
 
-          <button className='form-control' type="submit">Add</button><br />
+      <p>{message}</p>
 
-        </form>
-       
-      </div>
+      {/* TABLE */}
+      <Table
+        expense={expense}
+        fetchTransaction={fetchTransaction}
+      />
 
-      <Table />
-      <Balance/>
+      {/* BALANCE */}
+      <Balance expense={expense} />
+
     </>
   )
 }

@@ -1,48 +1,23 @@
 import React, { useEffect, useState } from 'react'
 import axios from "axios"
 
-function Balance() {
-  const [balance, setbalance] = useState(0)
-  const [message, setmessage] = useState("")
+function Balance({ expense }) {
 
-  const API = "http://localhost:3000/api/"
+  const income = expense
+    .filter(e => e.type === "Income")
+    .reduce((acc, curr) => acc + Number(curr.amount), 0)
 
-  const fetchBalance = async () => {
-    try {
-      const token = localStorage.getItem("token")
+  const expenseTotal = expense
+    .filter(e => e.type === "Expense")
+    .reduce((acc, curr) => acc + Number(curr.amount), 0)
 
-      const res = await axios.get(API + "getbalance", {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
-
-      console.log("BALANCE DATA:", res.data)
-
-      const income = res.data.income || 0
-      const expense = res.data.expense || 0
-
-      setbalance(income - expense)
-
-    } catch (error) {
-      setmessage(error.response?.data?.message || "Error fetching balance")
-    }
-  }
-
-  useEffect(() => {
-    fetchBalance()
-  }, [])
+  const balance = income - expenseTotal
 
   return (
     <div>
-      <h3>
-        Balance: 
-        <span style={{ color: balance >= 0 ? "green" : "red" }}>
-          ₹ {balance}
-        </span>
-      </h3>
-
-      {message && <p>{message}</p>}
+      <h3 style={{ color: "green" }}>Income: ₹ {income}</h3>
+      <h3 style={{ color: "red" }}>Expense: ₹ {expenseTotal}</h3>
+      <h2>Balance: ₹ {balance}</h2>
     </div>
   )
 }
