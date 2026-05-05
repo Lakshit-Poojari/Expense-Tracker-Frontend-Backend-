@@ -12,7 +12,7 @@ router.post("/login", login)
 // Transaction route
 router.post("/createTransaction", verifyToken, createTransaction)
 router.get("/getTransaction", verifyToken, getTranaction)
-router.get("/getbalance/", verifyToken, getUserBalance)
+router.get("/getbalance", verifyToken, getUserBalance)
 router.delete("/deleteTransaction/:id", verifyToken, removeTransaction)
 
 export default router

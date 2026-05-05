@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import Table from '../Table/Table'
 import axios from "axios"
+import Balance from '../Balance/Balance';
 
 function Layout() {
   const [expense, setExpense] = useState({
@@ -111,6 +112,7 @@ function Layout() {
       </div>
 
       <Table />
+      <Balance/>
     </>
   )
 }
