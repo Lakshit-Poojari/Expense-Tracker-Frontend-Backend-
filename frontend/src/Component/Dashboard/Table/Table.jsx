@@ -9,73 +9,92 @@ function Table() {
 
   const API = "http://localhost:3000/api/"
 
-  const fetchTransaction = async(e) => {
+  // FETCH
+  const fetchTransaction = async () => {
     try {
       const token = localStorage.getItem("token");
+
       const res = await axios.get(API + "getTransaction", {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    })
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
       console.log(res.data);
-      setmessage(res.data.message)
+      
+      setexpense(res.data); // ✅ correct
+
     } catch (error) {
-      setmessage(error.message)
+      setmessage(error.response?.data?.message || "Error fetching data")
     }
   }
 
-  const deleteTransaction = async(id) =>{
+  // DELETE
+  const deleteTransaction = async (id) => {
     try {
-
       const token = localStorage.getItem("token");
+
       const res = await axios.delete(API + `deleteTransaction/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
-      })
-      
-      
-      setmessage(res.data.message)
-      fetchTransaction()
+      });
+
+      setmessage(res.data.message);
+
+      fetchTransaction(); // refresh
+
     } catch (error) {
-      setmessage(error.message)
+      setmessage(error.response?.data?.message || "Delete failed")
     }
   }
 
   useEffect(() => {
     fetchTransaction()
   }, [])
-  
+
   return (
-    <>
+    <div className='container'>
       <table>
         <thead>
           <tr className='table-heading'>
-            <td>Amount</td>
-            <td>Type</td>
-            <td>Category</td>
-            <td>Date</td>
-            <td>Description</td>
+            <th>Amount</th>
+            <th>Type</th>
+            <th>Category</th>
+            <th>Date</th>
+            <th>Description</th>
+            <th>Action</th> 
           </tr>
         </thead>
+
         <tbody className='table-body'>
-            <tr>
-            <td>1</td>
-            <td>2</td>
-            <td>3</td>
-            <td>4</td>
-            <td>5</td>
-          </tr>
-          <tr>
-            <td>0</td>
-            <td>9</td>
-            <td>8</td>
-            <td>7</td>
-            <td>6</td>
-          </tr>
+          {expense.map((trans) => (
+            <tr key={trans.id}>
+              <td>₹ {trans.amount}</td>
+
+              <td style={{ color: trans.type === "Income" ? "green" : "red" }}>
+                {trans.type}
+              </td>
+
+              <td>{trans.category}</td>
+
+              <td>{new Date(trans.date).toLocaleDateString("en-IN")}</td>
+
+              <td>{trans.description}</td>
+
+              <td>
+                <button 
+                  onClick={() => deleteTransaction(trans.id)}
+                  className='delete-btn'
+                >
+                  Delete
+                </button>
+              </td>
+
+            </tr>
+          ))}
         </tbody>
       </table>
-    </>
+    </div>
   )
 }
 

@@ -1,9 +1,11 @@
-import { addTransaction, deleteTransacion, getTransaction } from "../model/transactionModel.js";
+import { addTransaction, deleteTransacion, getBalance, getTransaction } from "../model/transactionModel.js";
 
 export const createTransaction = async(req, res) =>{
     try {
         const user_id = req.user.id;
-        let {amount, type, category, description} = req.body
+        let {amount, type, category, description, date } = req.body
+
+        date = date || new Date().toISOString().split("T")[0];
 
         amount = Number(amount)
         if (isNaN(amount) || amount <= 0) {
@@ -18,7 +20,7 @@ export const createTransaction = async(req, res) =>{
             return res.json({message : "Invalid Type"})
         }
 
-        await addTransaction(user_id, amount, type, category, description)
+        await addTransaction(user_id, amount, type, category, description, date )
 
         return res.json({messge : "Transaction added"})
     } catch (error) {
@@ -54,15 +56,23 @@ export const removeTransaction = async(req, res) => {
     }
 }
 
-export const getUserBalance = async(req, res) => {
-    try {
-        const user_id = req.user.id
+export const getUserBalance = async (req, res) => {
+  try {
+    // ✅ safe access
+    const user_id = req.user?.id;
 
-        const balance = await getUserBalance(user_id)
-
-        return res.json(balance)
-    } catch (error) {
-        console.log(error);
-        return res.json({message : "Server error"})
+    if (!user_id) {
+      return res.status(401).json({ message: "Unauthorized" });
     }
-}
+
+    // ✅ call model (NOT itself)
+    const balance = await getBalance(user_id);
+    console.log("BALANCE FROM DB:", balance);
+
+    return res.json(balance);
+
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Server error" });
+  }
+};

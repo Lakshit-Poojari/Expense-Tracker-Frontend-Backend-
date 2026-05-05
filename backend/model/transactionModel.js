@@ -1,11 +1,11 @@
 import db from "../database/db.js";
 import mysql from "mysql2/promise"
 
-export const addTransaction = async(user_id, amount, type, category, description) =>{
+export const addTransaction = async(user_id, amount, type, category, description, date) =>{
     try {
         const [result] = await db.execute(
-            "INSERT INTO transaction (user_id, amount, type, category, description) VALUES(?, ?, ?, ?, ?)", 
-            [user_id, amount, type, category, description])
+            "INSERT INTO transaction (user_id, amount, type, category, description, date) VALUES(?, ?, ?, ?, ?, ?)", 
+            [user_id, amount, type, category, description, date])
         return result
     } catch (error) {
         console.log(error);
@@ -31,16 +31,24 @@ export const deleteTransacion = async(id, user_id) => {
     }
 }
 
-export const getBalance = async(user_id) =>{
-    try {
-        const [row] = await db.execute(`SELECT 
-            SUM(CASE WHEN type='income' THEN amount ELSE 0 END) AS income,
-            SUM(CASE WHEN type='expense' THEN amount ELSE 0 END) AS expense
-            FROM transactions WHERE user_id=?`, [user_id]
-        )
+export const getBalance = async (user_id) => {
+  try {
+    const [rows] = await db.execute(
+      `
+      SELECT 
+        COALESCE(SUM(CASE WHEN type='income' THEN amount END), 0) AS income,
+        COALESCE(SUM(CASE WHEN type='expense' THEN amount END), 0) AS expense
+      FROM transaction
+      WHERE user_id = ?
+      `,
+      [user_id]
+    );
 
-     return row[0] || null
-    } catch (error) {
-        console.log(error);
-    }
-}
+    console.log("ROWS:", rows); // 🔥 debug
+
+    return rows?.[0] || { income: 0, expense: 0 };
+
+  } catch (error) {
+    console.log(error);
+  }
+};
