@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import "../Login/Login.css"
+import axios from "axios"
 
 function Login() {
   const [login, setlogin] = useState({
@@ -20,19 +21,32 @@ function Login() {
     })
   }
 
-  const handleSubmit = async(e) => {
-    e.preventDefault()
-    try {
-      const res = await axios.post(API + "login", login)
-      setmessage(res.data.message)
-      navigate("/dashboard")
+  const handleSubmit = async (e) => {
+  e.preventDefault()
 
-    } catch (error) {
-      console.log(error);
-      setmessage(error.message)
-      
+  try {
+    const res = await axios.post(API + "login", login)
+
+    console.log("LOGIN RESPONSE:", res.data)
+
+    if (!res.data.token) {
+      // ❌ login failed
+      setmessage(res.data.message)
+      return
     }
+
+    // ✅ login success
+    localStorage.setItem("token", res.data.token)
+
+    setmessage(res.data.message)
+
+    navigate("/dashboard")
+
+  } catch (error) {
+    console.log(error)
+    setmessage(error.response?.data?.message || "Login failed")
   }
+}
 
 
   return (
@@ -42,13 +56,14 @@ function Login() {
       </div>
 
       <div className='container register'>
-        <form handleSubmit>
+        <form onSubmit={handleSubmit}>
           <label htmlFor="">User email</label>
           <input 
             type="text" 
             name='email'
             value={login.email} 
             placeholder='Enter Email' 
+            onChange={handleChange}
             required 
             className='form-control'/><br />
             <label htmlFor="">Enter password</label>
@@ -57,6 +72,7 @@ function Login() {
             name='password'
             value={login.password} 
             placeholder='Enter password' 
+            onChange={handleChange}
             required 
             className='form-control'/><br /><br />
             <button type='submit' className='form-control'>Login</button>

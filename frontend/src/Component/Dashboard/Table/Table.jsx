@@ -24,7 +24,7 @@ function Table() {
     }
   }
 
-  const deleteTransaction = async(e) =>{
+  const deleteTransaction = async(id) =>{
     try {
 
       const token = localStorage.getItem("token");
