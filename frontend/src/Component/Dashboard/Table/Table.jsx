@@ -1,10 +1,51 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import "../Table/Table.css"
+import axios from "axios"
 
 function Table() {
 
-  const [expense, setexpense] = useState()
+  const [expense, setexpense] = useState([])
   const [message, setmessage] = useState("")
+
+  const API = "http://localhost:3000/api/"
+
+  const fetchTransaction = async(e) => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await axios.get(API + "getTransaction", {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+      console.log(res.data);
+      setmessage(res.data.message)
+    } catch (error) {
+      setmessage(error.message)
+    }
+  }
+
+  const deleteTransaction = async(e) =>{
+    try {
+
+      const token = localStorage.getItem("token");
+      const res = await axios.delete(API + `deleteTransaction/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+      
+      
+      setmessage(res.data.message)
+      fetchTransaction()
+    } catch (error) {
+      setmessage(error.message)
+    }
+  }
+
+  useEffect(() => {
+    fetchTransaction()
+  }, [])
+  
   return (
     <>
       <table>
