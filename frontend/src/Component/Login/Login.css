@@ -1,0 +1,56 @@
+/* App.css or Register.css */
+
+body {
+  background: #f5f7fa;
+  font-family: Arial, sans-serif;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+/* Card style */
+.register {
+  background: #c1e8bf;
+  padding: 0px;
+  border-radius: 12px;
+  width: 280px !important;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.412) !important;
+  height: 300px !important;
+}
+
+/* Title */
+h2 {
+  margin-bottom: 20px;
+}
+
+/* Inputs */
+.form-control {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  outline: none;
+  transition: 0.2s;
+}
+
+.form-control:focus {
+  border-color: #4CAF50;
+}
+
+/* Button */
+button.form-control {
+  background: #4CAF50;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+button.form-control:hover {
+  background: #45a049;
+}

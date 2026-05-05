@@ -47,7 +47,8 @@ function Register() {
                     placeholder='Enter user name' 
                     onChange={handleChange} 
                     className='form-control'
-                    /><br /><br />
+                    required
+                    /><br />
 
                 <label htmlFor="">Email id</label><br />
                 <input 
@@ -57,7 +58,8 @@ function Register() {
                     placeholder='Enter user email' 
                     onChange={handleChange} 
                     className='form-control'
-                    /><br /><br />
+                    required
+                    /><br />
 
                 <label htmlFor="">Password</label><br />
                 <input 
@@ -67,7 +69,8 @@ function Register() {
                     placeholder='Enter password' 
                     onChange={handleChange} 
                     className='form-control'
-                    /><br /><br />
+                    required
+                    /><br />
 
                 <button type='submit' className='form-control'>Register</button>
             </form>
